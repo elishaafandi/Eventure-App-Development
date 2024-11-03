@@ -1,0 +1,299 @@
+<style>
+    /* Reset basic styling */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+
+    /* Container */
+    .container {
+        display: flex;
+        width: 100%;
+        height: 100vh;
+    }
+
+    /* Sidebar styling */
+    .submenu {
+            background-color: #800c12;
+            height: 100vh;
+            /*same meaning with 100%  Ensure body takes full height */
+            color:white;
+            font-weight: bold;
+        }
+
+        .menu-item {
+            
+            text-align: left;
+            padding: 5px;
+            border-radius: 20px;
+            margin-top: 10px;
+            /* Space between items */
+            transition: background-color 0.3s ease;
+            color:white;
+        }
+
+        .menu-item:hover {
+            background-color: #da6124;
+            /* Red background on hover */
+        }
+
+    .content{
+        font-family: Hagrid;
+    }
+
+    .nav-links {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 10px;
+        color: white;
+        text-decoration: none;
+        margin-bottom: 10px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .nav-links a.active,
+    .nav-links a:hover {
+        background-color: #FF8C00;
+        border-radius: 10px;
+    }
+
+    /* Main content styling */
+    .main-content {
+        width: 80%;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    /* Header styling */
+    .header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .header-buttons .btn {
+        border-radius: 20px;
+        padding: 10px 15px;
+        margin-left: 10px;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .header .btn-participant {
+        background-color: #FFA500;
+    }
+
+    .header .btn-organizer {
+        background-color: #8B0000;
+    }
+
+    .header .btn-bell {
+        background-color: #8B0000;
+        padding: 10px;
+    }
+
+
+    .breadcrumb {
+        font-size: 0.9em;
+        margin: 10px 0;
+    }
+
+    /* Info Section */
+    .info-section h1 {
+        font-size: 2em;
+        color: #8B0000;
+        margin-bottom: 10px;
+    }
+
+    .info-section p {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+
+    .contact-info {
+        display: flex;
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    .contact-info .fas{
+        color:#FFD700
+    }
+
+    .contact-info div {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1em;
+    }
+
+    /* Form Section */
+    .form-section {
+        background-color: #3b2d00;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+       margin-left: 15%;
+        
+
+    }
+
+    .form-section label {
+        display: block;
+        margin-top: 15px;
+        color:#FFD700
+    }
+
+    .file-upload {
+        background-color: white;
+        color: black;
+        padding: 5px;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 10px;
+    }
+
+    .form-row input {
+        width: 100%;
+    }
+
+    .note {
+        font-size: 0.8em;
+        color: #FFD700;
+        margin-top: 10px;
+    }
+
+    .submit-btn {
+        background-color: #FFD700;
+        color: black;
+        font-weight: bold;
+        border: none;
+        padding: 10px 20px;
+        margin-top: 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .submit-btn:hover {
+        background-color: #FFC107;
+    }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventure - Add Club / Association</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    
+
+<body>
+    <div class="container-fluid">
+        <!-- Sidebar -->
+        <div class="row">
+            <div class="col-2 submenu">
+                <div class="text-center">
+                    <img src="Eventure logo.jpg" alt="Eventure Logo" class="logo img-fluid">
+                </div>
+                <div class="p-2">
+                    <div class="menu-item Dashboard"><i class="fa-solid fa-table-columns"></i> Dashboard</div>
+                    <div class="menu-item Events"><i class="fa-solid fa-box-open"></i> Events Hosted</div>
+                    <div class="menu-item Participant"><i class="fa-solid fa-cart-shopping"></i> Participant Listing</div>
+                    <div class="menu-item Crew"><i class="fa-solid fa-wallet"></i> Crew Listing</div>
+                    <div class="menu-item Reports"><i class="bi bi-bar-chart-fill"></i> Reports</div>
+                </div>
+
+                <div class="p-2" style="margin-top: 60px;">
+                    <div class="menu-item Settings"><i class="fa-sharp-duotone fa-solid fa-gear"></i> Settings</div>
+                    <div class="menu-item Log Out"><i class="fa-solid fa-right-from-bracket"></i> Log Out</div>
+                </div>
+
+                <div class="p-2" style="margin-top: 100px;">
+                    <div class="menu-item Feedback"><i class="fa-solid fa-comments"></i> Feedback</div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-10 main-content">
+                <!-- Header with buttons -->
+                <header class="header">
+                    <div class="content" style="position:absolute; top:0; left:18%;">
+                        <h2 style="text-align: right;">ADD CLUB / ASSOCIATION</h2>
+                        <p class="breadcrumb" style="text-align: right;">Share more about your club</p>
+                    </div>
+                    
+                    <div class="header-buttons">
+                        <a class="btn btn-participant" href="#">PARTICIPANT SITE</a>
+                        <a class="btn btn-organizer" href="#">ORGANIZER SITE</a>
+                        <a class="btn btn-bell" href="#"><i class="fas fa-bell"></i></a>
+                    </div>
+                    <hr>
+                </header>
+                <hr style="border-top: 3px solid black;">
+                <!-- Page Content -->
+                <div class="content">
+                    <div class=" m-5 row">
+                    <div class="col-5 info-section">
+                        <h1>Let’s get your club on board!</h1>
+                        <h2><b>Enter your details here</b></h2>
+                        <p>For any questions, technical assistance, or inquiries about your club’s status approval, feel
+                            free to contact us using the information provided below.</p>
+                        <div class="contact-info">
+                            <div><i class="fas fa-phone-alt"></i> +6017-8997341</div>
+                            <div><i class="fas fa-envelope"></i> eventureutm@gmail.com</div>
+                        </div>
+                    </div>
+
+                    <!-- Form Section -->
+                    <div class="col-5 form-section">
+                        <label for="club-name">Name of Club/Association:</label>
+                        <input type="text" id="club-name" placeholder="Enter your club name">
+
+                        <label for="proof">Submit proof of your club’s legitimacy:</label>
+                        <input type="file" id="proof" class="file-upload">
+
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" placeholder="Enter email">
+                        <label for="phone">Phone Number:</label>
+                        <div class="form-row">
+                            <input type="text" id="phone" placeholder="Enter phone number">
+                        </div>
+                        <p>*Once club status has been approved, an email will be sent to the email address
+                            provided here.</p>
+
+                        <button class="submit-btn">SUBMIT NOW</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
