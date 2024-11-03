@@ -43,6 +43,21 @@ return new class extends Migration
             $table->longText('exception');
             $table->timestamp('failed_at')->useCurrent();
         });
+
+        Schema::create('students', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned();
+            $table->string('first_name', 100);
+            $table->string('last_name', 100);
+            $table->string('ic', 12);
+            $table->string('matric_no', 8)->unique();
+            $table->string('faculty_name', 100);
+            $table->string('sem_of_study', 3);
+            $table->string('college', 4);
+            $table->string('email', 100);
+            $table->boolean('gender');
+            // $table->foreign('user_id')->references('user_id')->on('users');
+        });
+        
     }
 
     /**
@@ -50,6 +65,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('students');
         Schema::dropIfExists('jobs');
         Schema::dropIfExists('job_batches');
         Schema::dropIfExists('failed_jobs');
