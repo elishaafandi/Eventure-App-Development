@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Event Feedback Collection</title>
+    <style>
+        .submenu {
+            background-color: #800c12;
+            height: 100vh;
+            color: white;
+            font-weight: bold;
+        }
+        .menu-item {
+            padding: 10px;
+            border-radius: 20px;
+            margin-top: 10px;
+            color: white;
+        }
+        .menu-item:hover {
+            background-color: #da6124;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .feedback-summary {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .feedback-item {
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+        .btn-filter {
+            border-radius: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-2 submenu">
+            <div class="text-center">
+                <img src="Eventure_logo.jpg" alt="Eventure Logo" class="img-fluid my-3">
+            </div>
+            <div class="p-2">
+                <div class="menu-item">Dashboard</div>
+                <div class="menu-item">Events Hosted</div>
+                <div class="menu-item">Participant Listing</div>
+                <div class="menu-item">Crew Listing</div>
+                <div class="menu-item">Reports</div>
+                <div class="menu-item">Feedback Collection</div> <!-- New Feedback Menu -->
+                <div class="menu-item mt-5">Settings</div>
+                <div class="menu-item">Log Out</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-10 main-content">
+            <h2>Event Feedback Collection</h2>
+            <p>Analyze participant feedback to understand the strengths and weaknesses of your events.</p>
+            
+            <!-- Feedback Summary Section -->
+            <div class="feedback-summary">
+                <h4>Overall Feedback Summary</h4>
+                <p>Average Rating: <strong>4.3/5</strong></p>
+                <p>Top Feedback Points: Positive - Organization, Atmosphere; Negative - Timing, Venue</p>
+            </div>
+
+            <!-- Filter and Search Section -->
+            <div class="d-flex justify-content-between mb-4">
+                <button class="btn btn-outline-secondary btn-filter">Filter by Rating</button>
+                <input type="text" class="form-control w-50" placeholder="Search feedback...">
+            </div>
+
+            <!-- Feedback List -->
+            <div class="feedback-item">
+                <p><strong>John Doe</strong> - Rating: 5/5</p>
+                <p>“The event was very well organized and enjoyable. The activities were engaging, and the staff were very friendly.”</p>
+            </div>
+
+            <div class="feedback-item">
+                <p><strong>Jane Smith</strong> - Rating: 3/5</p>
+                <p>“I enjoyed the event, but it felt a bit rushed. I would suggest allowing more time for activities.”</p>
+            </div>
+
+            <div class="feedback-item">
+                <p><strong>Ali Rahman</strong> - Rating: 4/5</p>
+                <p>“Great experience overall! The venue was a bit crowded, but I loved the performances.”</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
