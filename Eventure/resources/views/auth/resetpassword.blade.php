@@ -7,7 +7,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
@@ -120,59 +119,40 @@
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
                 <div class="registration-form border border-3 border-white">
-               
                     <div class="form-header">
-                        <h3>Login Form</h3>
+                        <h3>Reset Password Form</h3>
                     </div>
-            
-                    <form action="" method="POST" action="{{ route('login') }}">
-                    @csrf
+
+                    <form method="POST" action="{{ route('resetpassword') }}">
+                        @csrf
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
                         </div>
-
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
-                                <button type="button" class="btn btn-outline-secondary" id="togglePassword" style="color:white;">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </div>
+                            <label for="current_password" class="form-label">Current Password</label>
+                            <input type="password" id="current_password" name="current_password" class="form-control" required>
                         </div>
-
-                        <div>
-                            <a class="text-blue" href="{{ route('resetpasswordform') }}" style="color:#ffffff;">Reset password</a>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New Password</label>
+                            <input type="password" id="new_password" name="new_password" class="form-control" required>
                         </div>
-
-                        @error('failed')
-                        <p class="error text-white">{{ $message }}</p>
-                        @enderror
-
-                        <button type="submit" class="btn btn-register">Login</button>
+                        <div class="mb-3">
+                            <label for="new_password_confirmation" class="form-label">Confirm New Password</label>
+                            <input type="password" id="new_password_confirmation" name="new_password_confirmation" class="form-control" required>
+                        </div>
+                        <!-- Flash Message -->
+                        @if (session('status'))
+                        <p class="alert alert-success">{{ session('status') }}</p>
+                        @endif
+                        <button type="submit" class="btn btn-primary">Reset Password</button>
                     </form>
+
+
+
 
                 </div>
             </div>
         </div>
     </div>
 </body>
-
-</html>
-
-<script>
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordField = document.getElementById('password');
-
-    togglePassword.addEventListener('click', () => {
-        // Toggle the type attribute
-        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordField.setAttribute('type', type);
-
-        // Toggle the icon
-        togglePassword.innerHTML = type === 'password' 
-            ? '<i class="bi bi-eye"></i>' 
-            : '<i class="bi bi-eye-slash"></i>';
-    });
-</script>

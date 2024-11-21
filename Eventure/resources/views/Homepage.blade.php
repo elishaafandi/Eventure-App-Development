@@ -53,7 +53,7 @@
 
                 <div class="p-2" style="margin-top: 60px;">
                     <div class="menu-item Settings"><i class="fa-sharp-duotone fa-solid fa-gear"></i> Settings</div>
-                    <div class="menu-item Log Out"><i class="fa-solid fa-right-from-bracket"></i> Log Out</div>
+                    <a href="{{ route('login') }}"><div class="menu-item Log Out"><i class="fa-solid fa-right-from-bracket"></i> Log Out</div></a>
                 </div>
 
                 <div class="p-2" style="margin-top: 100px;">
