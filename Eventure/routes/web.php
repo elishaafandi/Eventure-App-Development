@@ -7,7 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController; // Correctly import AuthController
 use App\Http\Controllers\ResetpasswordController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostsController; // This might be unnecessary if not used
+
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 // Default home route
@@ -27,12 +27,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/logout', [DashboardController::class, 'logout'])->name('logout');
+    
     Route::get('/profilepage', [ProfileController::class, 'index'])->name('profilepage');
 
     //Route::get('/profileactivity', [ProfileController::class, 'activity'])->name('profileactivity');
-    Route::get('/profileactivity', [ProfileController::class, 'showActivity'])->name('profileactivity');
-    Route::get('/profileexperience', [ProfileController::class, 'showExperience'])->name('profileexperience');
-    Route::get('/profileclub', [ProfileController::class, 'showClub'])->name('profileclub');
+    Route::get('/Profileactivity', [ProfileController::class, 'showActivity'])->name('profileactivity');
+    Route::get('/Profileexperience', [ProfileController::class, 'showExperience'])->name('profileexperience');
+    
 });
 
 Route::view('/login', 'auth.login')->name('login'); // Route for showing the login form
@@ -45,6 +46,10 @@ Route::post('/resetpassword', [ResetpasswordController::class, 'Resetemailpass']
 
 
 Route::post('/profilepage', [ProfileController::class, 'update'])->name('profileEdit');
+Route::get('/Profileclub', [ProfileController::class, 'showClub'])->name('profileclub');
+Route::post('/profileclub/delete', [ProfileController::class, 'deleteClubMembership'])->name('deleteClubMembership');
+
+Route::get('/organizerclubevent', [DashboardController::class, 'organizerclubevent'])->name('organizer');
 //Route::get('/reset-password/{token}',[ResetpasswordController::class, 'passwordreset'] )->name('password.reset');
 // Additional authentication routes provided by Laravel (register, reset password, etc.)
 require __DIR__ . '/auth.php';

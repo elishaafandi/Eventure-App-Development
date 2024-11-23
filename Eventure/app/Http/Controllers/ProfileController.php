@@ -83,16 +83,36 @@ class ProfileController extends Controller
 
     public function showActivity()
     {
-        $user = Auth::user();
-        // Fetch activity data
-        return view('profile.Profileactivity', compact('user'));
+        $user = Auth::user(); // Get the authenticated user
+
+        // Fetch activity data based on the user's ID
+        $events = \DB::table('event_participants')
+            ->join('events', 'event_participants.id', '=', 'events.organizer_id')
+            ->where('event_participants.id', $user->id)
+            ->select('events.organizer', 'events.event_name', 'events.description')
+            ->distinct()
+            ->get();
+
+        // Pass the user and events data to the view
+        return view('profile.Profileactivity', compact('user', 'events'));
     }
+
 
     public function showExperience()
     {
         $user = Auth::user();
         // Fetch experience data
-        return view('profile.Profileexperience', compact('user'));
+        $user = Auth::user(); // Get the authenticated user
+
+        // Fetch activity data based on the user's ID
+        $events = \DB::table('event_crews')
+            ->join('events', 'event_crews.event_id', '=', 'events.event_id')
+            ->where('event_crews.id', $user->id)
+            ->select('event_crews.role', 'events.organizer', 'events.event_name', 'events.description')
+            ->distinct()
+            ->get();
+
+        return view('profile.Profileexperience', compact('user', 'events'));
     }
 
 
@@ -102,7 +122,41 @@ class ProfileController extends Controller
     public function showClub()
     {
         $user = Auth::user();
+
+        $events = \DB::table('event_crews')
+            ->join('club_memberships', 'event_crews.id', '=', 'club_memberships.user_id')
+            ->join('events', 'club_memberships.club_id', '=', 'events.club_id')
+            ->where('event_crews.id', $user->id)
+            ->select('club_memberships.club_id', 'events.organizer', 'events.description')
+            ->distinct()
+            ->get();
         // Fetch experience data
-        return view('profile.Profileclub', compact('user'));
+        return view('profile.Profileclub', compact('user', 'events'));
+    }
+
+
+     //Delete the user's club memberships.
+     
+    public function deleteClubMembership(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'club_id' => 'required|integer',
+        ]);
+
+        $user = Auth::user(); // Get the authenticated user
+
+        // Attempt to delete the club membership
+        $deleted = \DB::table('club_memberships')
+            ->where('club_id', $request->club_id)
+            ->where('user_id', $user->id)
+            ->delete();
+
+        // Check if the deletion was successful
+        if ($deleted) {
+            return back()->with('success', 'Club membership removed successfully.');
+        } else {
+            return redirect()->route('profileclub')->with('error', 'Failed to remove club membership.');
+        }
     }
 }
