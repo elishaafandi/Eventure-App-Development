@@ -105,6 +105,21 @@ mysqli_close($conn);
             <a href="participanthome.php" class="participant-site">PARTICIPANT SITE</a>
             <a href="organizerhome.php" class="organizer-site">ORGANIZER SITE</a> 
             <span class="notification-bell">🔔</span>
+            <div class="profile-menu">
+                <!-- Ensure the profile image is fetched and rendered properly -->
+                <?php if (!empty($student['student_photo'])): ?>
+                    <img src="data:image/jpeg;base64,<?php echo base64_encode($student['student_photo']); ?>" alt="Student Photo" class="profile-icon">
+                <?php else: ?>
+                    <img src="default-profile.png" alt="Default Profile" class="profile-icon">
+                <?php endif; ?>
+
+                <!-- Dropdown menu -->
+                <div class="dropdown-menu">
+                    <a href="profilepage.php">Profile</a>
+                    <hr>
+                    <a href="logout.php" class="sign-out">Sign Out</a>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -405,6 +420,25 @@ document.querySelector(".clear-all").addEventListener("click", () => {
 
     // Reset filters to show all events
     applyFilters("anytime", [], [], []);
+});
+
+/// Handle Profile Icon Click
+document.addEventListener("DOMContentLoaded", function () {
+    const profileMenu = document.querySelector(".profile-menu");
+    const profileIcon = document.querySelector(".profile-icon");
+
+    // Toggle dropdown on profile icon click
+    profileIcon.addEventListener("click", function (event) {
+        event.stopPropagation(); // Prevent event from bubbling
+        profileMenu.classList.toggle("open");
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (event) {
+        if (!profileMenu.contains(event.target)) {
+            profileMenu.classList.remove("open");
+        }
+    });
 });
 
     </script>
