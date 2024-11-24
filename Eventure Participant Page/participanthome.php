@@ -18,8 +18,13 @@ $sql = "SELECT * FROM events WHERE event_status = 'approved' AND application = '
 $organizer = isset($_GET['organizer']) ? trim($_GET['organizer']) : '';
 $event_type = isset($_GET['event_type']) ? trim($_GET['event_type']) : '0'; // Set event_type to '0' by default
 
+$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : 'anytime'; // Default is anytime
+$location = isset($_GET['location']) ? $_GET['location'] : ''; // Empty if no location selected
+$event_role = isset($_GET['event_role']) ? $_GET['event_role'] : ''; // Corrected to event_role
+$event_format = isset($_GET['event_format']) ? $_GET['event_format'] : ''; // Corrected to event_format
+
 // Check if filters are applied to modify the query
-$isFiltered = !empty($organizer) || ($event_type !== '0') ;
+$isFiltered = !empty($organizer) || ($event_type !== '0') || ($start_date !== 'anytime') || !empty($location) || !empty($event_role) || !empty($event_format);
 
 if ($isFiltered) {
     if (!empty($organizer)) {
@@ -28,8 +33,36 @@ if ($isFiltered) {
     if ($event_type !== '0') {
         $sql .= " AND event_type = '" . mysqli_real_escape_string($conn, $event_type) . "'";
     }
-}
 
+      // Filter by start date
+    if ($start_date == 'last-week') {
+        $sql .= " AND start_date >= CURDATE() - INTERVAL 1 WEEK";
+    } elseif ($start_date == 'this-month') {
+        $sql .= " AND start_date >= CURDATE() - INTERVAL 1 MONTH";
+    } elseif ($start_date !== 'anytime') {
+        // If a specific start date is selected, filter by that date
+        $sql .= " AND start_date = '" . mysqli_real_escape_string($conn, $start_date) . "'";
+    }
+
+    // Filter by location
+    if (!empty($location)) {
+        if ($location === 'on-campus') {
+            $sql .= " AND location LIKE '%UTM%'";
+        } elseif ($location === 'off-campus') {
+            $sql .= " AND location NOT LIKE '%UTM%'";
+        }
+    }
+
+   // Filter by event_role
+    if (!empty($event_role)) {
+        $sql .= " AND event_role = '" . mysqli_real_escape_string($conn, $event_role) . "'";
+    }
+
+// Filter by event_format
+    if (!empty($event_format)) {
+        $sql .= " AND event_format = '" . mysqli_real_escape_string($conn, $event_format) . "'";
+    }
+}
 // Always order by start date
 $sql .= " ORDER BY start_date ASC";
 
@@ -97,29 +130,48 @@ mysqli_close($conn);
 
     <main class="main-content">
     <aside class="filter-section">
+    <form action="participanthome.php" method="GET">
         <h3>Filter Event <span class="clear-all">Clear all</span></h3>
         <div class="filter-option">
             <label for="date-post">Date Post</label>
-            <select id="date-post">
-                <option value="anytime">Anytime</option>
-                <option value="last-week">Last Week</option>
-                <option value="this-month">This Month</option>
+            <select id="date-post" name="start_date">
+                <option value="anytime" <?php echo $start_date == 'anytime' ? 'selected' : ''; ?>>Anytime</option>
+                <option value="last-week" <?php echo $start_date == 'last-week' ? 'selected' : ''; ?>>This Week</option>
+                <option value="this-month" <?php echo $start_date == 'this-month' ? 'selected' : ''; ?>>This Month</option>
             </select>
         </div>
         <div class="filter-option">
             <label>Location</label>
-            <label><input type="checkbox" class="location-filter" value="on-campus"> On-Campus</label>
-            <label><input type="checkbox" class="location-filter" value="off-campus"> Off-Campus</label>
+            <label>
+                <input type="checkbox" class="location-filter" name="location" value="on-campus"
+                <?php echo $location === 'on-campus' ? 'checked' : ''; ?>> On-Campus
+            </label>
+            <label>
+                <input type="checkbox" class="location-filter" name="location" value="off-campus"
+                <?php echo $location === 'off-campus' ? 'checked' : ''; ?>> Off-Campus
+            </label>
         </div>
         <div class="filter-option">
             <label>Role</label>
-            <label><input type="checkbox" class="role-filter" value="crew"> Crew Committee</label>
-            <label><input type="checkbox" class="role-filter" value="participant"> Participant</label>
+            <label>
+                <input type="checkbox" name="event_role" value="crew" 
+                <?php echo ($event_role === 'crew') ? 'checked' : ''; ?>> Crew
+            </label>
+            <label>
+                <input type="checkbox" name="event_role" value="participant" 
+                <?php echo ($event_role === 'participant') ? 'checked' : ''; ?>> Participant
+            </label>
         </div>
         <div class="filter-option">
-            <label>Format</label>
-            <label><input type="checkbox" class="format-filter" value="in-person"> In-Person</label>
-            <label><input type="checkbox" class="format-filter" value="online"> Online</label>
+        <label>Format</label>
+            <label>
+                <input type="checkbox" name="event_format" value="in-person" 
+                <?php echo ($event_format === 'in-person') ? 'checked' : ''; ?>> In-Person
+            </label>
+            <label>
+                <input type="checkbox" name="event_format" value="online" 
+                <?php echo ($event_format === 'online') ? 'checked' : ''; ?>> Online
+            </label>
         </div>
         <button id="filter-btn">Apply Filters</button>
     </aside>
@@ -164,6 +216,7 @@ mysqli_close($conn);
                             data-event-type="<?php echo htmlspecialchars($event['event_type']); ?>"
                             data-event-format="<?php echo htmlspecialchars($event['event_format']); ?>"
                             data-created-at="<?php echo date("d/m/Y H:i", strtotime($event['created_at'])); ?>">
+                            data-event-photo="<?php echo htmlspecialchars($event['event_photo']); ?>">
                             Find Out More
                             </button>
                             <button class="join-button" 
@@ -193,6 +246,7 @@ mysqli_close($conn);
             <p><strong>Status:</strong> <span id="modal-event-status"><?php echo isset($event['status']) ? htmlspecialchars($event['status']) : ''; ?></span></p>
             <p><strong>Event Type:</strong> <span id="modal-event-type"><?php echo isset($event['event_type']) ? htmlspecialchars($event['event_type']) : ''; ?></span></p>
             <p><strong>Format:</strong> <span id="modal-event-format"><?php echo isset($event['event_format']) ? htmlspecialchars($event['event_format']) : ''; ?></span></p>
+            <p><strong>Event Photo:</strong> <span id="modal-event-photo"><?php echo isset($event['event_photo']) ? htmlspecialchars($event['event_photo']) : ''; ?></span></p>    
                 <div class="event-actions">
                     <button class="register-button" 
                         data-role="<?php echo isset($event['event_role']) ? htmlspecialchars($event['event_role']) : ''; ?>">
@@ -285,7 +339,74 @@ mysqli_close($conn);
         });
     });
 
+    document.getElementById("filter-btn").addEventListener("click", () => {
+    const datePost = document.getElementById("date-post").value;
+
+    // Get selected location filters (can have multiple values)
+    const locationFilters = Array.from(
+        document.querySelectorAll(".location-filter:checked")
+    ).map((checkbox) => checkbox.value);
+
+    // Get selected role filters (can have multiple values)
+    const roleFilters = Array.from(
+        document.querySelectorAll(".role-filter:checked")
+    ).map((checkbox) => checkbox.value);
+
+    // Get selected format filters (can have multiple values)
+    const formatFilters = Array.from(
+        document.querySelectorAll(".format-filter:checked")
+    ).map((checkbox) => checkbox.value);
+
+    // Call a function to apply filters
+    applyFilters(datePost, locationFilters, roleFilters, formatFilters);
+});
+
+function applyFilters(datePost, locationFilters, roleFilters, formatFilters) {
+    // Assuming events are dynamically loaded with a specific class or container
+    const events = document.querySelectorAll(".event-card");
+
+    events.forEach((event) => {
+        // Read attributes or data tags from events
+        const eventDate = event.getAttribute("data-date");
+        const eventLocation = event.getAttribute("data-location"); // e.g., "on-campus, off-campus"
+        const eventRole = event.getAttribute("data-role");
+        const eventFormat = event.getAttribute("data-event-format");
+
+        // Logic to determine if event should be visible
+        const matchesDate =
+            datePost === "anytime" || eventDate === datePost;
+
+        // Check if event matches selected location filters (handle multiple locations)
+        const matchesLocation =
+            locationFilters.length === 0 || locationFilters.some(location => eventLocation.includes(location));
+
+        // Check if event matches selected role filters (handle multiple roles)
+        const matchesRole =
+            roleFilters.length === 0 || roleFilters.some(role => eventRole.includes(role));
+
+        const matchesFormat =
+            formatFilters.length === 0 || formatFilters.includes(eventFormat);
+
+        // Show or hide based on matches
+        if (matchesDate && matchesLocation && matchesRole && matchesFormat) {
+            event.style.display = "block";
+        } else {
+            event.style.display = "none";
+        }
+    });
+}
+
+// Clear all filters
+document.querySelector(".clear-all").addEventListener("click", () => {
+    document.getElementById("date-post").value = "anytime";
+    document.querySelectorAll("input[type='checkbox']").forEach((checkbox) => {
+        checkbox.checked = false;
+    });
+
+    // Reset filters to show all events
+    applyFilters("anytime", [], [], []);
+});
+
     </script>
 </body>
 </html>
-s

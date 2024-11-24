@@ -128,6 +128,7 @@ header .logo:hover {
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
+    margin-right: 5px;
 }
 
 .search-bar button:hover {
@@ -293,4 +294,23 @@ header .logo:hover {
 #eventModal .register-button:hover,
 #eventModal .view-participant-button:hover {
     background-color: #850b0b;
+}
+
+#filter-btn {
+    padding: 10px 15px; /* Padding to make the button comfortable to click */
+    background-color: #d6d6d6; /* A blue background */
+    color: black; /* Text color is white */
+    border: none; /* Removes default border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Indicates the button is clickable */
+    font-size: 14.5px; /* Text size */
+}
+
+#filter-btn:hover {
+    background-color: #bebebe; /* Darker blue when hovered */
+}
+
+#filter-btn:active {
+    background-color: #bebebe; /* Even darker blue on click */
+    transform: translateY(0); /* Resets the hover effect */
 }
