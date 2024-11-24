@@ -1,0 +1,296 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+header {
+    background-color: #800c12;
+    color: #f5f4e6;
+    padding: 25px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo {
+    color: #f5f4e6;
+    font-weight: bold;
+    font-size: 25px;
+    font-family: Arial;
+    text-decoration: none;
+}
+
+header .logo:hover {
+    color:#ff9b00;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.nav-left a {
+    color: #fff;
+    margin-left: 20px;
+    text-decoration: none;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-left a {
+    color: #f5f4e6;
+    margin-left: 20px;
+    text-decoration: none;
+    font-family: Arial;
+    transition: 0.3s ease-in-out;
+}
+
+.nav-left a:hover{
+    color: #f3d64c;
+    text-decoration: underline;
+}
+
+.nav-left a.active {
+    color: #f3d64c; 
+    text-decoration: underline; 
+}
+
+.participant-site, .organizer-site {
+    padding: 8px 16px;
+    border-radius: 20px;  
+    border: 1px solid #000;
+    font-weight:400;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.participant-site {
+    background-color: #da6124;
+    color: #f5f4e6;
+}
+
+.organizer-site {
+    background-color: #f5f4e6;
+    color:#000;
+}
+
+.participant-site:hover {
+    background-color: #e08500;
+}
+
+.organizer-site:hover {
+    background-color: #da6124;
+    color: #f5f4e6;
+}
+
+.notification-bell {
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+.search-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #641414;
+}
+
+.search-section h1 {
+    margin-right: 10px;
+    font-size: 30px;
+    color:#f5f4e6;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input,
+.search-bar select {
+    padding: 17px 20px;
+    margin-right: 10px;
+    border: 1.5px solid #000;
+    border-radius: 8px;
+}
+
+.search-bar button {
+    padding: 12px 20px;
+    background-color: #da6124;
+    color: #f5f4e6;
+    border: 1.5px solid #000;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: #da6124;
+}
+
+.search-button i {
+    margin-right: 8px; 
+}
+
+.main-content {
+    display: flex;
+    padding: 20px;
+}
+
+.filter-section {
+    background-color: #fff;
+    padding: 20px;
+    margin-right: 20px;
+    border-radius: 8px;
+    width: 20%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 75%;
+}
+
+.event-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-title-organizer {
+    display: flex;
+    flex-direction: column;
+}
+
+.event-title-organizer h2 {
+    margin: 0;
+}
+
+.event-organizer {
+    margin-top: 4px; /* Adjust spacing between title and organizer */
+    font-size: 0.9rem; /* Adjust font size as needed */
+    color: #555; /* Optional: Different color for organizer text */
+}
+.event-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.event-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.find-out-more-button, .join-button {
+    background-color: #a62b2b;
+    color: #fff;
+    border: 1px solid #f5f4e6;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.find-out-more-button:hover {
+    background-color: #e08500;
+}
+
+.join-button:hover {
+    background-color: #e08500;
+}
+
+/* Position the icons aligned with the header text, on the right */
+.event-icons {
+    display: flex;
+    gap: 8px;
+}
+
+.notification-button, .heart-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    font-size: 1.2rem;
+}
+
+/* Hover effect */
+.notification-button:hover, .heart-button:hover {
+    color: #ff4b5c; /* Example hover color */
+}
+
+.notification-button:hover {
+    color: #e8d52b; /* Example hover color */
+}
+
+/* Modal Styling */
+/* Center the modal vertically and horizontally */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none; /* Hidden by default, displayed flex in JavaScript */
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    max-width: 600px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.modal-content {
+    width: 100%;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+}
+
+.modal .event-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+#eventModal .register-button,
+#eventModal .view-participant-button {
+    padding: 10px 20px;
+    background-color: #a50d0d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#eventModal .register-button:hover,
+#eventModal .view-participant-button:hover {
+    background-color: #850b0b;
+}
