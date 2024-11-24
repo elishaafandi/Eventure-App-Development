@@ -78,12 +78,12 @@
                     </select>
 
                     <label for="proof">Submit photo of your club's legitimacy:</label>
-                    <input type="file" id="image" name="proof" accept="image/*" onchange="validateImage(this)">
-                    <p id="file-error" style="color: red; display: none;">File must be less than 40 MB and only in image format.</p>
+                    <input type="file" id="image" name="image" accept="image/*" onchange="validateImage(this)">
+                    <p id="file-error-image" style="color: red; display: none;">File must be less than 40 MB and only in image format.</p>
 
                     <label for="proof">Submit proof of your club's legitimacy:</label>
                     <input type="file" id="proof" name="proof" accept="image/*,application/pdf" required onchange="validateFile(this)">
-                    <p id="file-error" style="color: red; display: none;">File must be less than 40 MB and only in PDF or image format.</p>
+                    <p id="file-error-proof" style="color: red; display: none;">File must be less than 40 MB and only in PDF or image format.</p>
 
                     <div class="form-row">
                         <div class="form-group">
@@ -98,6 +98,7 @@
 
                     <p class="note">*Once club status has been approved, an email will be sent to the provided email address.</p>
                     <button type="submit" class="submit-btn">SUBMIT NOW</button>
+
                 </form>
             </div>
         </section>
@@ -112,7 +113,7 @@
         const maxSize = 40 * 1024 * 1024; // 40 MiB in bytes
         const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
 
-        const errorElement = document.getElementById('file-error');
+        const errorElement = document.getElementById('file-error-proof');
         errorElement.style.display = 'none'; // Hide error message initially
 
         if (file) {
@@ -132,10 +133,10 @@
         return true;
     }
 
-    function validateimage(input) {
+    function validateImage(input) {
         const file = input.files[0]; // Get the selected file
-        const fileError = document.getElementById('file-error');
-        
+        const fileError = document.getElementById('file-error-image');
+
         // Clear any previous error messages
         fileError.style.display = 'none';
 
@@ -161,3 +162,65 @@
     }
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+
+        $('#myForm').on('submit', function(e) {
+
+            e.preventDefault(); // Prevent the default form submission
+
+
+            $.ajax({
+
+                type: $(this).attr('method'),
+
+                url: $(this).attr('action'),
+
+                data: $(this).serialize(),
+
+                success: function(response) {
+
+                    // Assuming the response contains a success message
+
+                    Swal.fire({
+
+                        icon: 'success',
+
+                        title: 'Success!',
+
+                        text: response.success, // Adjust according to your response structure
+
+                        timer: 5000,
+
+                        timerProgressBar: true,
+
+                    });
+
+                },
+
+                error: function(xhr) {
+
+                    // Handle error response if needed
+
+                    Swal.fire({
+
+                        icon: 'error',
+
+                        title: 'Oops...',
+
+                        text: 'Something went wrong!',
+
+                    });
+
+                }
+
+            });
+
+        });
+
+    });
+</script>
