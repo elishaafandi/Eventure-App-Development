@@ -36,7 +36,7 @@
                         @endforeach
                     </select>
                 
-                <a class="add-club-button">Add Club</a>
+                <a href="{{route('addclub')}}"class="add-club-button">Add Club</a>
                 </form>
 
             </div>

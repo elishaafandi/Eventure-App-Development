@@ -50,6 +50,8 @@ Route::get('/Profileclub', [ProfileController::class, 'showClub'])->name('profil
 Route::post('/profileclub/delete', [ProfileController::class, 'deleteClubMembership'])->name('deleteClubMembership');
 
 Route::get('/organizerclubevent', [DashboardController::class, 'organizerclubevent'])->name('organizer');
+Route::view('/addclub', 'addclub')->name('addclub'); 
+Route::post('/addclub', [ClubController::class, 'createclub'])->name('createclub');
 //Route::get('/reset-password/{token}',[ResetpasswordController::class, 'passwordreset'] )->name('password.reset');
 // Additional authentication routes provided by Laravel (register, reset password, etc.)
 require __DIR__ . '/auth.php';
