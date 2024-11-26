@@ -3,16 +3,24 @@
 include 'config.php';
 session_start();
 
-$user_id = $_SESSION['id'];
+$user_id = $_SESSION['ID'];
 
 // Check if the user is logged in
-if (!isset($_SESSION['id'])) {
+if (!isset($_SESSION['ID'])) {
     echo "<script>alert('You must be logged in to access this page.'); window.location.href='login.php';</script>";
     exit;
 }
 
 // Build the base query
 $sql = "SELECT * FROM events WHERE event_status = 'approved' AND application = 'open'";
+
+// Fetch student details to autofill form
+$studentQuery = "SELECT * FROM students WHERE id = ?";
+$studentStmt = $conn->prepare($studentQuery);
+$studentStmt->bind_param("i", $user_id);
+$studentStmt->execute();
+$studentResult = $studentStmt->get_result();
+$student = $studentResult->fetch_assoc();
 
 // Initialize variables for organizer and event_type from user input
 $organizer = isset($_GET['organizer']) ? trim($_GET['organizer']) : '';

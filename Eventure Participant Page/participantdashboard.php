@@ -6,13 +6,21 @@ include 'config.php';
 session_start();
 
 // Ensure the user is logged in
-if (!isset($_SESSION['id'])) {
+if (!isset($_SESSION['ID'])) {
     echo "You must be logged in to access this page.";
     exit;
 }
 
 // Get the user ID from the session
-$user_id = $_SESSION['id'];
+$user_id = $_SESSION['ID'];
+
+// Fetch student details to autofill form
+$studentQuery = "SELECT * FROM students WHERE id = ?";
+$studentStmt = $conn->prepare($studentQuery);
+$studentStmt->bind_param("i", $user_id);
+$studentStmt->execute();
+$studentResult = $studentStmt->get_result();
+$student = $studentResult->fetch_assoc();
 
 // Fetch the username of the logged-in user
 $sql_username = "SELECT username FROM users WHERE id = ?";

@@ -1,7 +1,23 @@
 <?php
 
 include 'config.php';
-    
+
+// Start the session to access session variables
+session_start();
+
+// Ensure the user is logged in
+if (!isset($_SESSION['ID'])) {
+    echo "You must be logged in to access this page.";
+    exit;
+}
+
+// Fetch student details to autofill form
+$studentQuery = "SELECT * FROM students WHERE id = ?";
+$studentStmt = $conn->prepare($studentQuery);
+$studentStmt->bind_param("i", $user_id);
+$studentStmt->execute();
+$studentResult = $studentStmt->get_result();
+$student = $studentResult->fetch_assoc();
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $fullName = $_POST['full_name'];
@@ -44,6 +60,21 @@ include 'config.php';
             <a href="#" class="participant-site">PARTICIPANT SITE</a>
             <a href="#" class="organizer-site">ORGANIZER SITE</a>
             <span class="notification-bell">🔔</span>
+            <div class="profile-menu">
+                <!-- Ensure the profile image is fetched and rendered properly -->
+                <?php if (!empty($student['student_photo'])): ?>
+                    <img src="data:image/jpeg;base64,<?php echo base64_encode($student['student_photo']); ?>" alt="Student Photo" class="profile-icon">
+                <?php else: ?>
+                    <img src="default-profile.png" alt="Default Profile" class="profile-icon">
+                <?php endif; ?>
+
+                <!-- Dropdown menu -->
+                <div class="dropdown-menu">
+                    <a href="profilepage.php">Profile</a>
+                    <hr>
+                    <a href="logout.php" class="sign-out">Sign Out</a>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -145,6 +176,28 @@ include 'config.php';
 
         </form>
     </main>
+
+<script>
+    /// Handle Profile Icon Click
+document.addEventListener("DOMContentLoaded", function () {
+    const profileMenu = document.querySelector(".profile-menu");
+    const profileIcon = document.querySelector(".profile-icon");
+
+    // Toggle dropdown on profile icon click
+    profileIcon.addEventListener("click", function (event) {
+        event.stopPropagation(); // Prevent event from bubbling
+        profileMenu.classList.toggle("open");
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (event) {
+        if (!profileMenu.contains(event.target)) {
+            profileMenu.classList.remove("open");
+        }
+    });
+});
+</script>
+
 </body>
 </html>
 
