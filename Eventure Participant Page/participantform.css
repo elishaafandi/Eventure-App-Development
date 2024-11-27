@@ -407,4 +407,11 @@ p.success-message {
     margin-top: 20px;
 }
 
+img {
+    max-width: 100px; /* Adjust as needed */
+    max-height: 100px; /* Adjust as needed */
+    object-fit: cover; /* Ensures the aspect ratio is maintained */
+    border-radius: 50%; /* Optional: makes it a circle */
+    border-color: #800c12;
+}
 

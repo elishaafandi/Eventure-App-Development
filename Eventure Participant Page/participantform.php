@@ -1,6 +1,7 @@
 <?php
 
 include 'config.php';
+
 // Start the session to access session variables
 session_start();
 
@@ -10,6 +11,16 @@ if (!isset($_SESSION['ID'])) {
     exit;
 }
 
+$user_id = $_SESSION['ID'];
+$event_id = isset($_GET['event_id']) ? $_GET['event_id'] : '';
+
+$eventQuery = "SELECT * FROM events WHERE event_id = ?";
+$eventStmt = $conn->prepare($eventQuery);
+$eventStmt->bind_param("i", $event_id);
+$eventStmt->execute();
+$eventResult = $eventStmt->get_result();
+$event = $eventResult->fetch_assoc();
+
 // Fetch student details to autofill form
 $studentQuery = "SELECT * FROM students WHERE id = ?";
 $studentStmt = $conn->prepare($studentQuery);
@@ -18,25 +29,46 @@ $studentStmt->execute();
 $studentResult = $studentStmt->get_result();
 $student = $studentResult->fetch_assoc();
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $fullName = $_POST['full_name'];
-        $email = $_POST['email'];
-        $idNumber = $_POST['id_number'];
-        $matricNumber = $_POST['matric_number'];
-        $phone = $_POST['phone'];
-        $address = $_POST['address'];
-        $yearCourse = $_POST['year_course'];
-        $gender = $_POST['gender'];
-        $attendance = $_POST['attendance'];
-        $requirements = $_POST['requirements'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-        $sql = "INSERT INTO participant (full_name, email, id_number, matric_number, phone, address, year_course, gender, attendance, requirements) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$fullName, $email, $idNumber, $matricNumber, $phone, $address, $yearCourse, $gender, $attendance, $requirements]);
-        
-        echo "<script>alert('Registration successful!'); window.location.href='participanthome.php';</script>";
+    $registration_status = $_POST['registration_status'];
+    $requirements = $_POST['requirements'];
+    $event_id = $_POST['event_id'];
+
+    // Check if the user is already registered for this specific event
+    $checkQuery = "SELECT * FROM event_participants WHERE id = ? AND event_id = ?";
+    $checkStmt = $conn->prepare($checkQuery);
+    $checkStmt->bind_param("ii", $user_id, $event_id);
+    $checkStmt->execute();
+    $checkResult = $checkStmt->get_result();
+
+    if ($checkResult->num_rows > 0) {
+        // User is already registered for this event
+        echo "<script>alert('You are already registered for this event.'); window.location.href='participanthome.php';</script>";
+        exit;
+    } else {
+         // Insert into event_participants table (do NOT include participant_id, let MySQL handle it)
+         $sql_event_participant = "INSERT INTO event_participants (participant_id, event_id, id, registration_status, attendance, attendance_status, requirements, created_at)
+         VALUES (?, ?, ?, 'registered', ?, 'pending', ?, NOW())";
+         $stmt_event = $conn->prepare($sql_event_participant);
+         $stmt_event->bind_param("iiiss", $participant_id, $event_id, $user_id, $attendance, $requirements);
+
+        if ($stmt_event->execute()) {
+            // Decrease the available slots in the events table
+            $updateSlotsQuery = "UPDATE events SET available_slots = available_slots - 1 WHERE event_id = ? AND available_slots > 0";
+            $updateSlotsStmt = $conn->prepare($updateSlotsQuery);
+            $updateSlotsStmt->bind_param("i", $event_id);
+
+            if ($updateSlotsStmt->execute()) {
+                echo "<script>alert('Registration successful! Available slots updated.'); window.location.href='participanthome.php';</script>";
+            } else {
+                echo "<script>alert('Registration successful, but failed to update available slots.');</script>";
+            }
+        } else {
+            echo "<script>alert('Failed to register for the event. Please try again.');</script>";
+        }
     }
+}
 ?>
 
 <!DOCTYPE html>
@@ -89,46 +121,61 @@ $student = $studentResult->fetch_assoc();
                 <legend>Personal Details</legend>
 
                 <div class="form-group">
-                    <label for="full_name">Full Name</label>
-                    <input type="text" id="full_name" name="full_name" required>
+                    <label for="photo">Crew Photo</label>
+                   
+                    <?php if (!empty($student['student_photo'])): ?>
+                        <img src="data:image/jpeg;base64,<?php echo base64_encode($student['student_photo']); ?>" alt="Student Photo">
+                    <?php else: ?>
+                        <p>No photo available</p>
+                    <?php endif; ?>
+                </div>
+
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" value="<?php echo $student['first_name']; ?>" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" value="<?php echo $student['last_name']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" value="<?php echo $student['email']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
-                    <label for="id_number">Identification Number</label>
-                    <input type="text" id="id_number" name="id_number" required>
+                    <label for="ic">Identification Number</label>
+                    <input type="text" value="<?php echo $student['ic']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
-                    <label for="matric_number">Matric Number</label>
-                    <input type="text" id="matric_number" name="matric_number" required>
+                    <label for="matric_no">Matric Number</label>
+                    <input type="text" value="<?php echo $student['matric_no']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" required>
+                    <input type="tel" value="<?php echo $student['phone']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
-                    <label for="address">College Address</label>
-                    <input type="text" id="address" name="address" required>
+                    <label for="college">College Address</label>
+                    <input type="text" value="<?php echo $student['college']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
                     <label for="year_course">Year/Course (in 24/25)</label>
-                    <input type="text" id="year_course" name="year_course" required>
+                    <input type="text" value="<?php echo $student['year_course']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
                     <label>Gender</label>
                     <div class="gender-options">
-                        <input type="radio" id="male" name="gender" value="Male" required>
+                        <input type="radio" id="male" name="gender" value="Male" <?php echo ($student['gender'] == 'Male') ? 'checked' : ''; ?> disabled>
                         <label for="male">Male</label>
-                        <input type="radio" id="female" name="gender" value="Female" required>
+                        <input type="radio" id="female" name="gender" value="Female" <?php echo ($student['gender'] == 'Female') ? 'checked' : ''; ?> disabled>
                         <label for="female">Female</label>
                     </div>
                 </div>

@@ -1,25 +1,52 @@
 <?php
-    include 'config.php';
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $fullName = $_POST['full_name'];
-        $email = $_POST['email'];
-        $idNumber = $_POST['id_number'];
-        $matricNumber = $_POST['matric_number'];
-        $phone = $_POST['phone'];
-        $address = $_POST['address'];
-        $yearCourse = $_POST['year_course'];
-        $gender = $_POST['gender'];
-        $attendance = $_POST['attendance'];
-        $requirements = $_POST['requirements'];
-    
-        $sql = "INSERT INTO participant (full_name, email, id_number, matric_number, phone, address, year_course, gender, attendance, requirements) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$fullName, $email, $idNumber, $matricNumber, $phone, $address, $yearCourse, $gender, $attendance, $requirements]);
-        
-        echo "<script>alert('Registration successful!'); window.location.href='participanthome.php';</script>";
+include 'config.php';
+
+// Start the session to access session variables
+session_start();
+
+// Ensure the user is logged in
+if (!isset($_SESSION['ID'])) {
+    echo "You must be logged in to access this page.";
+    exit;
+}
+
+$user_id = $_SESSION['ID'];
+$event_id = isset($_GET['event_id']) ? $_GET['event_id'] : '';
+
+// Fetch student details to autofill form
+$studentQuery = "SELECT * FROM students WHERE id = ?";
+$studentStmt = $conn->prepare($studentQuery);
+$studentStmt->bind_param("i", $user_id);
+$studentStmt->execute();
+$studentResult = $studentStmt->get_result();
+$student = $studentResult->fetch_assoc();
+
+// Fetch existing registration details for autofill
+$registrationQuery = "SELECT * FROM event_participants WHERE id = ? AND event_id = ?";
+$registrationStmt = $conn->prepare($registrationQuery);
+$registrationStmt->bind_param("ii", $user_id, $event_id);
+$registrationStmt->execute();
+$registrationResult = $registrationStmt->get_result();
+$registration = $registrationResult->fetch_assoc();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $attendance = $_POST['attendance'];
+    $requirements = $_POST['requirements'];
+
+    $updateQuery = "UPDATE event_participants 
+                    SET attendance = ?, requirements = ?, updated_at = NOW() 
+                    WHERE id = ? AND event_id = ?";
+    $updateStmt = $conn->prepare($updateQuery);
+    $updateStmt->bind_param("ssii", $attendance, $requirements, $user_id, $event_id);
+
+    if (!$updateStmt->execute()) {
+        echo "<script>alert('Update failed. Error: " . $updateStmt->error . "');</script>";
+    } else {
+        echo "<script>alert('Your information has been updated successfully!'); window.location.href='participantdashboard.php';</script>";
     }
+    
+}
 ?>
 
 <!DOCTYPE html>
@@ -45,6 +72,21 @@
             <a href="#" class="participant-site">PARTICIPANT SITE</a>
             <a href="#" class="organizer-site">ORGANIZER SITE</a>
             <span class="notification-bell">🔔</span>
+            <div class="profile-menu">
+                <!-- Ensure the profile image is fetched and rendered properly -->
+                <?php if (!empty($student['student_photo'])): ?>
+                    <img src="data:image/jpeg;base64,<?php echo base64_encode($student['student_photo']); ?>" alt="Student Photo" class="profile-icon">
+                <?php else: ?>
+                    <img src="default-profile.png" alt="Default Profile" class="profile-icon">
+                <?php endif; ?>
+
+                <!-- Dropdown menu -->
+                <div class="dropdown-menu">
+                    <a href="profilepage.php">Profile</a>
+                    <hr>
+                    <a href="logout.php" class="sign-out">Sign Out</a>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -57,46 +99,61 @@
                 <legend>Personal Details</legend>
 
                 <div class="form-group">
-                    <label for="full_name">Full Name</label>
-                    <input type="text" id="full_name" name="full_name" required>
+                    <label for="photo">Crew Photo</label>
+                   
+                    <?php if (!empty($student['student_photo'])): ?>
+                        <img src="data:image/jpeg;base64,<?php echo base64_encode($student['student_photo']); ?>" alt="Student Photo">
+                    <?php else: ?>
+                        <p>No photo available</p>
+                    <?php endif; ?>
+                </div>
+
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" value="<?php echo $student['first_name']; ?>" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" value="<?php echo $student['last_name']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" value="<?php echo $student['email']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
-                    <label for="id_number">Identification Number</label>
-                    <input type="text" id="id_number" name="id_number" required>
+                    <label for="ic">Identification Number</label>
+                    <input type="text" value="<?php echo $student['ic']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
-                    <label for="matric_number">Matric Number</label>
-                    <input type="text" id="matric_number" name="matric_number" required>
+                    <label for="matric_no">Matric Number</label>
+                    <input type="text" value="<?php echo $student['matric_no']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" required>
+                    <input type="tel" value="<?php echo $student['phone']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
-                    <label for="address">College Address</label>
-                    <input type="text" id="address" name="address" required>
+                    <label for="college">College Address</label>
+                    <input type="text" value="<?php echo $student['college']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
                     <label for="year_course">Year/Course (in 24/25)</label>
-                    <input type="text" id="year_course" name="year_course" required>
+                    <input type="text" value="<?php echo $student['year_course']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
                     <label>Gender</label>
                     <div class="gender-options">
-                        <input type="radio" id="male" name="gender" value="Male" required>
+                        <input type="radio" id="male" name="gender" value="Male" <?php echo ($student['gender'] == 'Male') ? 'checked' : ''; ?> disabled>
                         <label for="male">Male</label>
-                        <input type="radio" id="female" name="gender" value="Female" required>
+                        <input type="radio" id="female" name="gender" value="Female" <?php echo ($student['gender'] == 'Female') ? 'checked' : ''; ?> disabled>
                         <label for="female">Female</label>
                     </div>
                 </div>
@@ -104,30 +161,51 @@
                 <div class="form-group">
                     <label>Will you be able to attend the event?</label>
                     <div class="attendance-options">
-                        <input type="radio" id="yes" name="attendance" value="Yes" required>
-                        <label for="male">Yes</label>
-                        <input type="radio" id="maybe" name="attendance" value="Maybe" required>
-                        <label for="female">Maybe</label>
+                        <input type="radio" id="yes" name="attendance" value="Yes" <?php echo ($registration['attendance'] == 'Yes') ? 'checked' : ''; ?> required>
+                        <label for="yes">Yes</label>
+                        <input type="radio" id="maybe" name="attendance" value="Maybe" <?php echo ($registration['attendance'] == 'Maybe') ? 'checked' : ''; ?> required>
+                        <label for="maybe">Maybe</label>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="requirements">Special Requirements</label>
                     <select id="requirements" name="requirements" required>
-                        <option value="">Select one</option>
-                        <option value="Meal Option">Meal Options</option>
-                        <option value="Vegetarian">Vegetarian</option>
-                        <option value="Others">Others</option>
+                        <option value="" disabled>Select one</option>
+                        <option value="Meal Option" <?php echo ($registration['requirements'] == 'Meal Option') ? 'selected' : ''; ?>>Meal Option</option>
+                        <option value="Vegetarian" <?php echo ($registration['requirements'] == 'Vegetarian') ? 'selected' : ''; ?>>Vegetarian</option>
+                        <option value="Others" <?php echo ($registration['requirements'] == 'Others') ? 'selected' : ''; ?>>Others</option>
                     </select>
                 </div>
             </fieldset>
 
             <div class="button-group">
                 <button type="submit" class="submit-button">Submit</button>
-                <button type="button" class="cancel-button" onclick="window.location.href='participanthome.php';">Cancel</button>
+                <button type="button" class="cancel-button" onclick="window.location.href='participantdashboard.php';">Cancel</button>
             </div>
         </form>
     </main>
+
+<script>
+    /// Handle Profile Icon Click
+document.addEventListener("DOMContentLoaded", function () {
+    const profileMenu = document.querySelector(".profile-menu");
+    const profileIcon = document.querySelector(".profile-icon");
+
+    // Toggle dropdown on profile icon click
+    profileIcon.addEventListener("click", function (event) {
+        event.stopPropagation(); // Prevent event from bubbling
+        profileMenu.classList.toggle("open");
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (event) {
+        if (!profileMenu.contains(event.target)) {
+            profileMenu.classList.remove("open");
+        }
+    });
+});
+</script>
 
 </body>
 </html>
