@@ -152,22 +152,40 @@ $events_participant = $result_participant->num_rows > 0 ? $result_participant->f
                                 ?>
                                 </td>
                                 <td>
-                                <?php echo htmlspecialchars($event['status']); ?></td>
+                                <?php 
+                                    if ($event['event_status'] == 'upcoming') {
+                                        echo '<span class="status pending">Upcoming</span>';
+                                    } elseif ($event['event_status'] == 'ongoing') {
+                                        echo '<span class="status interview">Ongoing</span>';
+                                    } elseif ($event['event_status'] == 'completed') {
+                                        echo '<span class="status applied">Completed</span>';
+                                    } elseif ($event['event_status'] == 'rejected') {
+                                        echo '<span class="status rejected">Rejected</span>';
+                                    } 
+                                ?>
                                 </td>
                                 <td>
                                 <a href="viewcrewapplication.php?event_id=<?php echo $event['event_id']; ?>" class="btn view">View</a>
-                                     <!-- Edit button enabled only if application status is 'pending' or 'applied' -->
+                                    <!-- Edit button enabled only if application status is 'pending' or 'applied' and event status is 'upcoming' or 'ongoing' -->
                                     <a href="editcrewform.php?event_id=<?php echo $event['event_id']; ?>"
-                                    class="btn edit <?php echo ($event['application_status'] != 'pending' && $event['application_status'] != 'applied') ? 'disabled' : ''; ?>"
-                                    <?php echo ($event['application_status'] != 'pending' && $event['application_status'] != 'applied') ? 'onclick="return false;"' : ''; ?>>
+                                    class="btn edit <?php echo (in_array($event['application_status'], ['pending', 'applied']) && in_array($event['status'], ['upcoming', 'ongoing'])) ? '' : 'disabled'; ?>"
+                                    <?php echo (in_array($event['application_status'], ['pending', 'applied']) && in_array($event['status'], ['upcoming', 'ongoing'])) ? '' : 'onclick="return false;"'; ?>>
                                     Edit
                                     </a>
-    
-                                    <!-- Delete button enabled only if application status is 'pending' or 'applied' -->
-                                    <a href="delete_event.php?event_id=<?php echo $event['event_id']; ?>"
-                                    class="btn delete <?php echo ($event['application_status'] != 'pending' && $event['application_status'] != 'applied') ? 'disabled' : ''; ?>"
-                                    <?php echo ($event['application_status'] != 'pending' && $event['application_status'] != 'applied') ? 'onclick="return false;"' : 'onclick="return confirm(\'Are you sure you want to delete this application?\')"'; ?>>
+
+                                    <!-- Cancel button enabled only if application status is 'pending' or 'applied' and event status is 'upcoming' or 'ongoing' -->
+                                    <a href="deletecrewform.php?event_id=<?php echo $event['event_id']; ?>"
+                                    class="btn delete <?php echo (in_array($event['application_status'], ['pending', 'applied']) && in_array($event['status'], ['upcoming', 'ongoing'])) ? '' : 'disabled'; ?>"
+                                    <?php echo (in_array($event['application_status'], ['pending', 'applied']) && in_array($event['status'], ['upcoming', 'ongoing'])) ? 
+                                    'onclick="return confirm(\'Are you sure you want to delete this application?\')"' : 'onclick="return false;"'; ?>>
                                     Cancel
+                                    </a>
+
+                                    <!-- Rate button enabled only if event status is 'completed' -->
+                                    <a href="rateparticipantform.php?event_id=<?php echo $event['event_id']; ?>"
+                                    class="btn rate <?php echo $event['status'] === 'completed' ? '' : 'disabled'; ?>"
+                                    <?php echo $event['status'] === 'completed' ? '' : 'onclick="return false;"'; ?>>
+                                    Rate
                                     </a>
                                 </td>
                             </tr>
@@ -213,19 +231,36 @@ $events_participant = $result_participant->num_rows > 0 ? $result_participant->f
                                     ?>
                                 </td>
                                 <td>
-                                <?php echo htmlspecialchars($event['status']); ?>
+                                <?php 
+                                    if ($event['event_status'] == 'upcoming') {
+                                        echo '<span class="status pending">Upcoming</span>';
+                                    } elseif ($event['event_status'] == 'ongoing') {
+                                        echo '<span class="status interview">Ongoing</span>';
+                                    } elseif ($event['event_status'] == 'completed') {
+                                        echo '<span class="status applied">Completed</span>';
+                                    } elseif ($event['event_status'] == 'rejected') {
+                                        echo '<span class="status rejected">Rejected</span>';
+                                    } 
+                                ?>
                                 </td>
                                 <td>
-                                <a href="viewparticipantapplication.php?event_id=<?php echo $event['event_id']; ?>" class="btn view">View</a>
+                                    <a href="viewparticipantapplication.php?event_id=<?php echo $event['event_id']; ?>" class="btn view">View</a>
                                     <a href="editparticipantform.php?event_id=<?php echo $event['event_id']; ?>"
                                     class="btn edit <?php echo ($event['registration_status'] != 'registered') ? 'disabled' : ''; ?>"
                                     <?php echo ($event['registration_status'] != 'registered') ? 'onclick="return false;"' : ''; ?>>
                                     Edit
                                     </a>
-                                    <a href="delete_event.php?event_id=<?php echo $event['event_id']; ?>"
+
+                                    <a href="deleteparticipantform.php?event_id=<?php echo $event['event_id']; ?>"
                                     class="btn delete <?php echo ($event['registration_status'] != 'registered') ? 'disabled' : ''; ?>"
                                     <?php echo ($event['registration_status'] != 'registered') ? 'onclick="return false;"' : 'onclick="return confirm(\'Are you sure you want to delete this application?\')"'; ?>>
                                     Cancel
+                                    </a>
+
+                                    <a href="rateparticipantform.php?event_id=<?php echo $event['event_id']; ?>"
+                                    class="btn rate <?php echo ($event['status'] != 'completed') ? 'disabled' : ''; ?>"
+                                    <?php echo ($event['status'] != 'completed') ? 'onclick="return false;"' : ''; ?>>
+                                    Rate
                                     </a>
                                 </td>
                             </tr>
