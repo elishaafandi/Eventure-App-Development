@@ -1,0 +1,432 @@
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+    }
+        
+    header {
+        background-color: #800c12;
+        color: #f5f4e6;
+        padding: 25px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    header .logo {
+        color: #f5f4e6;
+        font-weight: bold;
+        font-size: 25px;
+        font-family: Arial;
+        text-decoration: none;
+    }
+    
+    header .logo:hover {
+        color:#ff9b00;
+    }
+    
+    .header-left {
+        display: flex;
+        align-items: center;
+    }
+    
+    .nav-left a {
+        color: #fff;
+        margin-left: 20px;
+        text-decoration: none;
+    }
+    
+    .nav-right {
+        display: flex;
+        align-items: center;
+    }
+    
+    .nav-left a {
+        color: #f5f4e6;
+        margin-left: 20px;
+        text-decoration: none;
+        font-family: Arial;
+        transition: 0.3s ease-in-out;
+    }
+    
+    .nav-left a:hover{
+        color: #f3d64c;
+        text-decoration: underline;
+    }
+    
+    .nav-left a.active {
+        color: #f3d64c; 
+        text-decoration: underline; 
+    }
+    
+    .participant-site, .organizer-site {
+        padding: 8px 16px;
+        border-radius: 20px;  
+        border: 1px solid #000;
+        font-weight:400;
+        text-decoration: none;
+        margin-left: 10px;
+    }
+    
+    .participant-site {
+        background-color: #da6124;
+        color: #f5f4e6;
+    }
+    
+    .organizer-site {
+        background-color: #f5f4e6;
+        color:#000;
+    }
+    
+    .participant-site:hover {
+        background-color: #e08500;
+    }
+    
+    .organizer-site:hover {
+        background-color: #da6124;
+        color: #f5f4e6;
+    }
+    
+    .notification-bell {
+        font-size: 24px;
+        margin-left: 10px;
+    }
+    
+
+    /* Profile Menu Styling */
+.profile-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.profile-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 10px;
+    cursor: pointer;
+    object-fit: cover; /* Ensure proper image fit */
+}
+
+.dropdown-menu {
+    display: none; /* Hidden by default */
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown-menu .sign-out {
+    color: #d9534f;
+}
+
+.dropdown-menu hr {
+    margin: 10px 0;
+    border: none;
+    border-top: 1px solid #eee;
+}
+
+/* Show the dropdown only when the menu is open */
+.profile-menu.open .dropdown-menu {
+    display: block;
+}
+
+/* Style for the main-content section */
+.main-content {
+    width: 100%; 
+    max-width: 1400px; 
+    min-height: 90vh; 
+    height: auto; 
+    margin: 0 auto; 
+    padding: 20px; 
+    background-color: #eedcc4;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Optional: Adjusting the feedback section layout to match the bigger main content */
+.feedback-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px; /* Adjust space between containers */
+    margin-top: 20px;
+}
+
+/* Feedback Container */
+.feedback-container {
+    flex: 1; /* Make it take up available space */
+    padding: 15px;
+    border-radius: 10px;
+    color: #b63131;
+    max-width: 650px; /* Control maximum width */
+}
+
+/* Feedback Container h1 and h2 adjustments */
+.feedback-container h1 {
+    font-size: 40px; /* Adjusted font size for better spacing */
+    color: #800c12;
+    font-weight: bold;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin-bottom: 2px;  /* Reduce space below h1 */
+}
+
+.feedback-container h2 {
+    font-size: 20px;
+    margin-top: 2px;  /* Reduce top margin to bring it closer to h1 */
+    color: black;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+
+.feedback-container p {
+    margin-top: 40px;
+    line-height: 1.5;
+    color: black;
+}
+
+/* Form Container Styling */
+.form-container {
+    flex: 1; /* Make it take up available space */
+    padding: 20px;
+    background-color: #681d1d;
+    border-radius: 10px;
+    color: #fbd231;
+    max-width: 650px; /* Control maximum width */
+    min-height: 90vh; 
+    margin-right: 0; /* Remove the margin for alignment */
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    font-size: 22px;
+}
+
+/* Form Group Adjustments */
+.form-group {
+    margin-bottom: 20px; /* Moderate space between form groups */
+}
+
+/* Input Fields Styling */
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="tel"],
+.form-container input[type="file"] {
+    width: 95%; /* Ensure inputs take full width of the container */
+    padding: 8px;  /* Smaller padding */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;  /* Slightly smaller font size */
+}
+
+/* Ensure First Name and Last Name input fields are below their labels */
+.form-group label {
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 5px;
+    display: block; /* Ensure label is displayed above input */
+}
+
+/* Feedback Section */
+.feedback-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px; /* Space between feedback and profile picture */
+}
+
+/* Feedback Container */
+.feedback-container {
+    flex: 1;
+    padding: 15px;
+    border-radius: 10px;
+    color: #b63131;
+    max-width: 650px;
+}
+
+.profile-pic {
+    width: 100px;  /* Set width */
+    height: 100px; /* Set height */
+    border-radius: 50%;  /* Make it circular */
+    margin-top: 10px;  /* Add space above the profile picture */
+    align-self: center; /* Center the profile picture */
+}
+
+/* Ensure Profile Picture is Below Feedback Section */
+.profile-pic-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 10px; /* Add space between the feedback and profile picture */
+}
+/* Optional: Styling for Modal, Notes, and other UI Elements (no changes needed) */
+
+
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.rating-stars {
+    font-size: 30px; /* Adjust the size of the stars */
+    cursor: pointer;
+}
+
+.star {
+    margin: 0 5px;
+    color: #ddd;
+    
+}
+
+.star.filled {
+    color: #ff9900;
+}
+
+/* Event Details Section */
+.event-details {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(2, 0, 0, 0.218);
+}
+
+.event-details h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #ae0909;
+    text-transform: uppercase;
+    border-bottom: 2px solid #661010;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.event-details p {
+    margin: 8px 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #555;
+}
+
+.event-details p strong {
+    font-weight: bold;
+    color: #000000;
+}
+
+/* Add hover effects */
+.event-details p:hover {
+    color: #a31a1a;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .event-details {
+        padding: 15px;
+    }
+
+    .event-details h2 {
+        font-size: 20px;
+    }
+
+    .event-details p {
+        font-size: 14px;
+    }
+}
+
+#feedback {
+    width: 100%; /* Make the textarea take the full width */
+    padding: 12px; /* Add padding inside the textarea */
+    font-size: 16px; /* Set a readable font size */
+    border: 1px solid #ddd; /* Light border color */
+    border-radius: 8px; /* Rounded corners for the textarea */
+    background-color: #f5f4e6; /* Light background color */
+    color: #333; /* Dark text color */
+    resize: vertical; /* Allow resizing vertically */
+    box-sizing: border-box; /* Ensure padding is included in width/height */
+    margin-top: 10px; /* Slight margin above the textarea */
+}
+
+#feedback:focus {
+    outline: none; /* Remove default outline */
+    border-color: #800c12; /* Highlight the border in a distinct color on focus */
+    box-shadow: 0 0 5px rgba(128, 12, 18, 0.5); /* Add a shadow for focus effect */
+}
+
+#feedback::placeholder {
+    color: #888; /* Lighter color for placeholder text */
+    font-style: italic; /* Optional: make placeholder italic */
+}
+
+/* Submit button */
+button[type="submit"] {
+    background-color: #ffb300;
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #97731f;
+}
