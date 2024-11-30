@@ -1,0 +1,457 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+header {
+    background-color: #891a1a;
+    color: #f5f4e6;
+    padding: 50px 40px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+header h1 {
+    color: #f5f4e6;
+    margin-left: 220px;
+    padding-left: 30px;
+    margin-bottom: 10px;
+}
+
+/* Adjusted header height for sidebar positioning */
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.nav-right {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.nav-right a {
+    margin-left: 10px;
+    text-decoration: none;
+    font-family: Arial;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 400;
+    transition: 0.3s ease-in-out;
+}
+
+.nav-right a:hover{
+    color: #f3d64c;
+    text-decoration: underline;
+}
+
+.nav-right a.active {
+    color: #f3d64c; 
+    text-decoration: underline; 
+}
+
+.participant-site {
+    background-color: #f5f4e6;
+    color: #cb0000;
+    border: 1px solid #000;
+}
+
+.organizer-site {
+    background-color: #da6124;
+    color: #f5f4e6;
+    border: 1px solid #000;
+}
+
+.participant-site:hover,
+.organizer-site:hover {
+    background-color: #da6124;
+    color: #f5f4e6;
+}
+
+.notification-bell {
+    font-size: 18px;
+    margin-left: 10px;
+    cursor: pointer;
+    color: #f5f4e6;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background-color: #9b252b;
+    color: #f5f4e6;
+    padding-top: 80px; /* Adjusted for fixed header offset */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    z-index: 5;
+}
+
+/* Logo Container */
+.logo-container {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo {
+    color: #f5f4e6;
+    font-weight: bold;
+    font-size: 25px;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+
+/* Sidebar Menu Items */
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    width: 100%; /* Full width for easier alignment */
+}
+
+.sidebar ul li {
+    width: 100%;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: #f5f4e6;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.sidebar ul li a i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    background-color: #ff4d11;
+}
+
+/* Additional spacing for sections if needed */
+.sidebar ul + ul {
+    margin-top: 60px;
+}
+
+
+/* Main Content Styling */
+.main-content {
+    margin-left: 220px; 
+    margin-top: 10px; 
+    padding: 20px;
+    width: calc(100% - 220px);
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.participant-site-btn, .organizer-site-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Search and Filter Container */
+.search-filter-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.search-bar {
+    padding: 8px 12px;
+    font-size: 14px;
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Filter button styling */
+.filter-btn {
+    padding: 8px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #891a1a; /* Dark red background */
+    border: none;
+    border-radius: 20%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+}
+
+.filter-btn:hover {
+    background-color: #b22828; /* Lighter red on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+.filter-btn:active {
+    background-color: #a12525; /* Slightly darker red when active */
+    transform: scale(1); /* Return to original size on click */
+}
+
+
+/* Filter Styles*/
+.filter-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown styling */
+.filter-dropdown {
+    position: absolute;
+    top: 50px; /* Adjust to position the dropdown */
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    list-style: none;
+    padding: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    width: 200px;
+}
+
+.filter-container label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.filter-container select {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+
+
+.event-info {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #9b252b;
+    color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    position: relative;
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.event-details {
+    flex: 1; /* Takes up available space on the left */
+}
+
+.event-header h2 {
+    margin-bottom: 10px;
+    color: #f3d64c;
+}
+
+.event-header p {
+    color: #fafaf5;
+}
+
+.event-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    gap: 30px;
+    align-items: flex-end;
+}
+
+.edit-btn,
+.delete-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 80px;
+    text-align: center;
+}
+
+.edit-btn {
+    background-color: #007bff;
+}
+
+.delete-btn {
+    background-color: #dc3545; 
+}
+
+.edit-btn:hover {
+    background-color: #0875ea; 
+}
+
+.delete-btn:hover {
+    background-color: #b02634; 
+}
+
+.tab {
+    padding: 8px 15px;
+    font-size: 14px;
+    border: none;
+    background-color: #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.tab.active {
+    background-color: #ff6347;
+    color: #fff;
+}
+
+
+/* Crew Table Styles */
+.crew-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.crew-table th, .crew-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.crew-table th {
+    background-color: #891a1a;
+    color: white;
+}
+
+.crew-table td {
+    vertical-align: middle;
+}
+
+.crew-table input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.crew-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.view-button {
+    background-color: #fad900;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.view-button:hover {
+    background-color: #e08500;
+}
+
+/* Action Buttons */
+.action-container {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.accept-btn, .reject-btn, .interview-btn, .view-interview-btn {
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.accept-btn {
+    background-color: #28a745;
+}
+
+.reject-btn {
+    background-color: #dc3545;
+}
+
+.interview-btn {
+    background-color: #ffc107;
+}
+
+.view-interview-btn {
+    background-color: #2a7ad0;
+}
+
+.accept-btn:hover {
+    background-color: #218838;
+}
+
+.reject-btn:hover {
+    background-color: #c82333;
+}
+
+.interview-btn:hover {
+    background-color: #e0a800;
+}
+
+.view-interview-btn:hover {
+    background-color: #0056b3;
+}
+
+.interview-details-button {
+    background-color: #ffcc00;
+    color: #000;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.interview-details-button:hover {
+    background-color: #ffaa00;
+    color: #fff;
+}
+
