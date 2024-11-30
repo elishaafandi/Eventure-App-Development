@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <?php
 session_start();
 include 'config.php';
@@ -94,12 +95,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['mark_done'])) {
 $stmt->close();
 $conn->close();
 ?>
+=======
+
+>>>>>>> Stashed changes
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< Updated upstream
     <title>Eventure Organizer Site</title>
     <link rel="stylesheet" href="interviewlist.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -218,5 +223,85 @@ $conn->close();
             </div>
         </div>
     </main>
+=======
+    <title>Interview List</title>
+    <link rel="stylesheet" href="interviewlist.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Interview List</h1>
+
+        <!-- Interview Details Form -->
+        <h2>Interview Form</h2>
+        <form action="interviewlist.php" method="POST">
+            <div class="form-group">
+                <label for="interview_date">Interview Date:</label>
+                <input type="date" id="interview_date" name="interview_date" required>
+            </div>
+            <div class="form-group">
+                <label for="interview_time">Interview Time:</label>
+                <input type="time" id="interview_time" name="interview_time" required>
+            </div>
+            <div class="form-group">
+                <label for="interview_venue">Interview Venue:</label>
+                <input type="text" id="interview_venue" name="interview_venue" required>
+            </div>
+            <div class="form-group">
+                <label for="event_format">Event Format:</label>
+                <select id="event_format" name="event_format" required>
+                    <option value="online">Online</option>
+                    <option value="face-to-face">Face-to-Face</option>
+                </select>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+
+        <!-- Check if there are interviewed crew members -->
+        <?php if (!empty($interviewed_crew_members)): ?>
+            <h2>Interviewed Crew Members</h2>
+            <form action="interviewlist.php" method="POST">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Name</th>
+                            <th>IC Number</th>
+                            <th>Mobile Number</th>
+                            <th>Email</th>
+                            <th>Skills</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($interviewed_crew_members as $member): ?>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="selected_crew[]" value="<?php echo htmlspecialchars($member['id']); ?>">
+                                </td>
+                                <td><?php echo htmlspecialchars($member['name']); ?></td>
+                                <td><?php echo htmlspecialchars($member['ic']); ?></td>
+                                <td><?php echo htmlspecialchars($member['mobile']); ?></td>
+                                <td><?php echo htmlspecialchars($member['email']); ?></td>
+                                <td><?php echo htmlspecialchars($member['skills']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <div class="buttons">
+                    <button type="submit" name="action" value="accept" class="accept-btn">Accept</button>
+                    <button type="submit" name="action" value="reject" class="reject-btn">Reject</button>
+                </div>
+            </form>
+        <?php else: ?>
+            <p class="no-interviews">No crew members have been interviewed yet.</p>
+        <?php endif; ?>
+
+        <!-- Back button -->
+        <div class="buttons">
+            <a href="organizercrew.php" class="view-interview-btn">
+                <button>Back</button>
+            </a>
+        </div>
+    </div>
+>>>>>>> Stashed changes
 </body>
 </html>
