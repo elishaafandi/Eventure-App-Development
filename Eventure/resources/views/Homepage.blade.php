@@ -13,8 +13,8 @@
     <header>
         <div class="header-left">
             <div class="nav-right">
-                <a href="participanthome.php" class="participant-site">PARTICIPANT SITE</a>
-                <a href="organizerhome.php" class="organizer-site">ORGANIZER SITE</a>
+                <a href="{{ route('participanthome') }}" class="participant-site">PARTICIPANT SITE</a>
+                <a href="" class="organizer-site">ORGANIZER SITE</a>
                 <span class="notification-bell">🔔</span>
                 <a href="{{ route('profilepage') }}" class="profile-icon">
                     <i class="fas fa-user-circle"></i>
