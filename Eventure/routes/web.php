@@ -55,7 +55,7 @@ Route::view('/addclub', 'addclub')->name('addclub');
 Route::post('/addclub', [ClubController::class, 'createclub'])->name('createclub');
 
 //Route::get('/participanthome', [ParticipantHomeController::class, 'index'])->name('participanthome');
-Route::view('/participanthome', 'participanthome')->name('participanthome');
+Route::view('/participanthome', 'participant.participanthome')->name('participanthome');
 
 //Route::get('/reset-password/{token}',[ResetpasswordController::class, 'passwordreset'] )->name('password.reset');
 // Additional authentication routes provided by Laravel (register, reset password, etc.)
