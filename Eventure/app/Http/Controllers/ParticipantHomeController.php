@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class ParticipantHomeController extends Controller
@@ -67,5 +70,92 @@ class ParticipantHomeController extends Controller
         // $events = $eventsQuery->get();
 
         // return view('participanthome', compact('user', 'events'));
+    }
+
+    public function display(Request $request)
+    {
+        $user = Auth::user(); // Get the authenticated user
+
+        // Fetch data from the database
+        $resultCrew = DB::table('event_crews')
+            ->join('events', 'event_crews.event_id', '=', 'events.event_id')
+            ->select(
+                'event_crews.crew_id',
+                'event_crews.event_id',
+                'events.status',
+                'events.organizer',
+                'events.event_name',
+                'event_crews.role',
+                'event_crews.application_status',
+                'event_crews.created_at',
+                'event_crews.updated_at'
+            )
+            ->where('event_crews.id', $user->id) // Use the user's ID
+            ->get();
+
+        // Log or debug the result
+        if ($resultCrew->isEmpty()) {
+            logger('No data found for user ID: ' . $user->id);
+        }
+
+        $resultParticipant = DB::table('event_participants as ep')
+            ->join('events as e', 'ep.event_id', '=', 'e.event_id')
+            ->select(
+                'ep.participant_id',
+                'e.organizer',
+                'e.status',
+                'ep.event_id',
+                'e.event_name',
+                'ep.registration_status',
+                'ep.created_at',
+                'ep.updated_at'
+            )
+            ->where('ep.id', $user->id)
+            ->get();
+
+        $feedbackOrganizerCrew = [];
+
+        // Assuming $user is the authenticated user
+        $user = Auth::user();
+
+        // Use Laravel Query Builder to perform the query
+        $feedbackOrganizerCrew = DB::table('feedbackcrew as fc')
+            ->join('events as e', 'fc.event_id', '=', 'e.event_id')
+            ->select(
+                'fc.feedback_crew_id',
+                'e.event_name',
+                'fc.feedback_text',
+                'fc.rating',
+                'fc.created_at'
+            )
+            ->where('fc.from_id', $user->id) // Changed from whereIn to where
+            ->get();
+
+
+
+
+        // $feedbackParticipant = [];
+
+        // // Assuming $participant_ids is an array that contains the participant IDs
+        // $participant_ids = [1, 2, 3]; // Example participant IDs
+
+        // if (!empty($participant_ids)) {
+        //     // Use Laravel Query Builder to perform the query
+        //     $feedbackParticipant = DB::table('feedbackevent as fe')
+        //         ->join('events as e', 'fe.event_id', '=', 'e.event_id')
+        //         ->select(
+        //             'fe.feedbackevent_id', 
+        //             'e.event_name', 
+        //             'fe.feedback', 
+        //             'fe.rating', 
+        //             'fe.feedback_date'
+        //         )
+        //         ->whereIn('fe.participant_id', $participant_ids)
+        //         ->get();
+        // }
+
+
+        // Pass data to the view
+        return view('participant.participantdashboard', compact('resultCrew', 'resultParticipant', 'feedbackOrganizerCrew'));
     }
 }

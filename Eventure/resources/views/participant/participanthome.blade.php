@@ -13,7 +13,7 @@
             <a href="{{ route('participanthome') }}" class="logo">EVENTURE</a> 
             <nav class="nav-left">
                 <a href="{{ route('participanthome') }}" class="{{ request()->routeIs('participanthome') ? 'active' : '' }}">Home</a>
-                <a href="" class="{{ request()->routeIs('participantdashboard') ? 'active' : '' }}">Dashboard</a>
+                <a href="{{ route('participantdashboard') }}">Dashboard</a>
                 <a href="" class="{{ request()->routeIs('participantcalendar') ? 'active' : '' }}">Calendar</a>
                 <a href="{{ route('profilepage') }}" class="{{ request()->routeIs('profilepage') ? 'active' : '' }}">User Profile</a>
             </nav>

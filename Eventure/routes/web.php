@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ClubController;
 use App\Http\Controllers\AuthController; // Correctly import AuthController
 use App\Http\Controllers\ResetpasswordController;
 use App\Http\Controllers\ParticipantHomeController;
@@ -40,9 +41,9 @@ Route::middleware('auth')->group(function () {
 Route::view('/login', 'auth.login')->name('login'); // Route for showing the login form
 Route::post('/login', [AuthController::class, 'login']); // Route for handling the login post request
 
-Route::view('/Homepage', 'Homepage')->name('Homepage', []); // Route for showing the login forM
+Route::view('/Homepage', 'Homepage')->name('Homepage'); // Route for showing the login forM
 
-Route::view('/resetpassword', 'auth.resetpassword')->name('resetpasswordform', []);
+Route::view('/resetpassword', 'auth.resetpassword')->name('resetpasswordform');
 Route::post('/resetpassword', [ResetpasswordController::class, 'Resetemailpass'])->name('resetpassword');
 
 
@@ -56,7 +57,9 @@ Route::post('/addclub', [ClubController::class, 'createclub'])->name('createclub
 
 //Route::get('/participanthome', [ParticipantHomeController::class, 'index'])->name('participanthome');
 Route::view('/participanthome', 'participant.participanthome')->name('participanthome');
-
+// Route::view('/participantdashboard', 'participant.participantdashboard')->name('participantdashboard');
+Route::get('/participantdashboard', [ParticipantHomeController::class, 'display'])->name('participantdashboard');
+//Route::get('/participantdashboard', [ParticipantHomeController::class, 'display']);
 //Route::get('/reset-password/{token}',[ResetpasswordController::class, 'passwordreset'] )->name('password.reset');
 // Additional authentication routes provided by Laravel (register, reset password, etc.)
 require __DIR__ . '/auth.php';
