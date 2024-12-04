@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
             ProfileComposer::class
         );
         View::composer(
-            ['Homepage'], // List the views that will receive the data
+            ['Homepage', 'participant.participantdashboard'], // List the views that will receive the data
             OrganizerComposer::class
         );
     }

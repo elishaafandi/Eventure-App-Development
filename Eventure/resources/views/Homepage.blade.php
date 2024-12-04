@@ -24,7 +24,7 @@
 
         <div class="header-center">
             <div class="welcome-section">
-                <h2>Welcome Back, !</h2>
+                <h2>Welcome Back, {{ $username }} !</h2>
                 <form>
                     <select name="club_id" class="club-role-dropdown" onchange="updateEvents(this.value)">
                         <option value="" selected >Select Club</option>
