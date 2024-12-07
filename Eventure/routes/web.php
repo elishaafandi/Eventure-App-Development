@@ -9,8 +9,9 @@ use App\Http\Controllers\AuthController; // Correctly import AuthController
 use App\Http\Controllers\ResetpasswordController;
 use App\Http\Controllers\ParticipantHomeController;
 use App\Http\Controllers\ParticipantDashController;
-
-
+use App\Http\Controllers\CrewController;
+use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\Student;
 use Illuminate\Support\Facades\Route;
 
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -60,21 +61,35 @@ Route::post('/addclub', [ClubController::class, 'createclub'])->name('createclub
 
 //Route::get('/participanthome', [ParticipantHomeController::class, 'index'])->name('participanthome');
 Route::view('/participanthome', 'participant.participanthome')->name('participanthome');
+
 // Route::view('/participantdashboard', 'participant.participantdashboard')->name('participantdashboard');
 Route::get('/participantdashboard', [ParticipantHomeController::class, 'display'])->name('participantdashboard');
 Route::get('/participant/viewcrew/{event_id}', [ParticipantDashController::class, 'viewCrewApplication'])->name('participantviewcrew');
 Route::get('/participant/viewparticipant/{event_id}', [ParticipantDashController::class, 'viewParticipantApplication'])->name('participantviewparticipant');
+
 // Route::view('/editparticipant', 'participant.editparticipant')->name('editparticipant');
 Route::match(['get', 'post'], '/participant/edit-participant/{event_id}', [ParticipantDashController::class, 'editParticipant'])->name('editParticipant');
 Route::match(['get', 'post'], '/participant/edit-crew/{event_id}', [ParticipantDashController::class, 'editCrew'])->name('editCrew');
+
 Route::delete('/delete-crew/{event_id}', [ParticipantDashController::class, 'deleteCrew'])->name('deleteCrew'); 
 Route::delete('/delete-participant/{event_id}', [ParticipantDashController::class, 'deleteParticipant'])->name('deleteParticipant'); 
 
+//Route::view('/participanthome', 'participant.participanthome')->name('participanthome');
+Route::get('/participanthome', [ParticipantHomeController::class, 'showParticipantHome'])->name('participanthome');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/crewform', [CrewController::class, 'showCrewForm'])->name('crewform');
+    Route::post('/crewform/submit', [CrewController::class, 'submitCrewForm'])->name('crewform.submit');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/participantform', [ParticipantController::class, 'showParticipantForm'])->name('participantform');
+    Route::post('/participantform/submit', [ParticipantController::class, 'submitParticipantForm'])->name('participantform.submit');
+});
 
 Route::get('/feedback/{eventId}/{clubId}', [FeedbackController::class, 'showEventFeedback'])->name('feedback.event');
 Route::post('/feedback/crew', [FeedbackController::class, 'submitCrewFeedback'])->name('feedback.crew.submit');
 Route::post('/feedback/crews', [FeedbackController::class, 'getCrewsByEvent'])->name('feedback.crews');
-
 
 Route::get('/feedback-form/{eventId}/{clubId}', [FeedbackController::class, 'showFeedbackForm'])->name('feedback.form');
 Route::post('/submit-feedback', [FeedbackController::class, 'submitFeedback'])->name('feedback.submit');
