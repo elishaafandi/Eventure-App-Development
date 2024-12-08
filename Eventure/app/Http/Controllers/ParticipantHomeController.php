@@ -4,73 +4,97 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use App\Models\Event;
+use App\Models\User;
+use App\Models\Crew;
+use App\Models\Student; 
 
 class ParticipantHomeController extends Controller
 {
-    public function index(Request $request)
+    public function showParticipantHome(Request $request)
     {
-        // // Ensure user is authenticated
-        // if (!Auth::check()) {
-        //     return redirect()->route('login')->with('error', 'You must be logged in to access this page.');
-        // }
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to access this page.');
+        }
 
-        // // Get the authenticated user's ID
-        // $user_id = Auth::id();
+        $students = Student::where('id', Auth::id())->firstOrFail();
 
-        // // Fetch student details for autofill
-        // $user = User::find($user_id);
+        // Retrieve filter inputs
+        $club_name = $request->input('club_name', ''); // Default to an empty string if not set
+        $club_type = $request->input('club_type', '0'); // Default to '0' (Choose Club Type) if not set
+        $start_date = $request->input('start_date', 'anytime'); // Default to 'anytime'
+        $location = $request->input('location'); // Can be null or 'on-campus' / 'off-campus'
+        $event_role = $request->input('event_role'); // 'crew' or 'participant'
+        $event_format = $request->input('event_format'); // 'in-person' or 'online'
 
-        // // Base query for events
-        // $eventsQuery = Event::where('event_status', 'approved')
-        //                     ->where('application', 'open');
+        // Initialize query and isFiltered flag
+        $query = Event::query(); // Ensure only approved events are considered
+        $isFiltered = false;
 
-        // // Apply filters if provided
-        // if ($request->filled('organizer')) {
-        //     $eventsQuery->where('organizer', 'like', '%' . $request->organizer . '%');
-        // }
-        // if ($request->filled('event_type') && $request->event_type !== '0') {
-        //     $eventsQuery->where('event_type', $request->event_type);
-        // }
+        // Apply filters and set the flag
+        if (!empty($club_name)) {
+            $query->whereHas('club', function ($q) use ($club_name) {
+                $q->where('club_name', 'like', '%' . $club_name . '%');
+            });
+            $isFiltered = true;
+        }
 
-        // if ($request->filled('start_date')) {
-        //     $start_date = $request->start_date;
-        //     if ($start_date == 'last-week') {
-        //         $eventsQuery->where('start_date', '>=', now()->subWeek());
-        //     } elseif ($start_date == 'this-month') {
-        //         $eventsQuery->where('start_date', '>=', now()->subMonth());
-        //     } elseif ($start_date !== 'anytime') {
-        //         $eventsQuery->whereDate('start_date', $start_date);
-        //     }
-        // }
+        if ($club_type !== '0') {
+            $query->whereHas('club', function ($q) use ($club_type) {
+                $q->where('club_type', $club_type);
+            });
+            $isFiltered = true;
+        }
 
-        // if ($request->filled('location')) {
-        //     $location = $request->location;
-        //     if ($location === 'on-campus') {
-        //         $eventsQuery->where('location', 'like', '%UTM%');
-        //     } elseif ($location === 'off-campus') {
-        //         $eventsQuery->where('location', 'not like', '%UTM%');
-        //     }
-        // }
+        if ($start_date && $start_date !== 'anytime') {
+            $isFiltered = true;
+            if ($start_date === 'last-week') {
+                $query->where('start_date', '>=', now()->subWeek());
+            } elseif ($start_date === 'this-month') {
+                $query->where('start_date', '>=', now()->subMonth());
+            }
+        }
 
-        // if ($request->filled('event_role')) {
-        //     $eventsQuery->where('event_role', $request->event_role);
-        // }
+        if ($location) {
+            $isFiltered = true;
+            if ($location === 'on-campus') {
+                $query->where('location', 'like', '%UTM%');
+            } elseif ($location === 'off-campus') {
+                $query->where('location', 'not like', '%UTM%');
+            }
+        }
 
-        // if ($request->filled('event_format')) {
-        //     $eventsQuery->where('event_format', $request->event_format);
-        // }
+        if ($event_role) {
+            $query->where('event_role', $event_role);
+            $isFiltered = true;
+        }
 
-        // // Always order by start_date descending
-        // $eventsQuery->orderBy('start_date', 'desc');
+        if ($event_format) {
+            $query->where('event_format', $event_format);
+            $isFiltered = true;
+        }
 
-        // // Execute query and get results
-        // $events = $eventsQuery->get();
+        // Retrieve all events if no filters are applied
+        $events = $query->get(); // Always get approved events, with or without filters
 
-        // return view('participanthome', compact('user', 'events'));
+
+        // Pass variables to the view
+        return view('participant.participanthome', compact(
+            'students',
+            'events', 
+            'start_date', 
+            'location', 
+            'event_role', 
+            'event_format', 
+            'club_name', 
+            'club_type', 
+            'isFiltered'
+        ));
     }
 
     public function display(Request $request)
@@ -197,8 +221,6 @@ class ParticipantHomeController extends Controller
         // Return the view with the data
         return view('participant.viewcrewapplication', compact('student', 'event'));
     }
-    
-    
     
 
 }
