@@ -71,7 +71,7 @@ Route::delete('/delete-crew/{event_id}', [ParticipantDashController::class, 'del
 Route::delete('/delete-participant/{event_id}', [ParticipantDashController::class, 'deleteParticipant'])->name('deleteParticipant'); 
 
 
-Route::get('/feedback/{eventId}/{clubId}', [FeedbackController::class, 'showEventFeedback'])->name('feedback.event');
+Route::get('/feedback/{eventId}/{clubId}', [FeedbackController::class, 'showFeedbackForm'])->name('feedback.event');
 Route::post('/feedback/crew', [FeedbackController::class, 'submitCrewFeedback'])->name('feedback.crew.submit');
 Route::post('/feedback/crews', [FeedbackController::class, 'getCrewsByEvent'])->name('feedback.crews');
 

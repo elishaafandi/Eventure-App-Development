@@ -1,136 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback</title>
-    <link rel="stylesheet" href="{{ asset('build/assets/ratecrew.css') }}">
+    <title>Event Feedback</title>
+    <link rel="stylesheet" href="{{ asset('build/assets/rateevent.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
-<header>
-    <h2>Rate Your Crew</h2>
-    <div class="header-left">
-        <div class="nav-right">
-            <a href="{{ route('participanthome') }}" class="participant-site">PARTICIPANT SITE</a>
-            <a href="" class="organizer-site">ORGANIZER SITE</a> 
-            <span class="notification-bell">🔔</span>
-            <a href="" class="profile-icon"><i class="fas fa-user-circle"></i></a>
+    <header>
+        <div class="header-left">
+            <a href="/participanthome" class="logo">EVENTURE</a>
+            <nav class="nav-left">
+                <a href="/participanthome">Home</a>
+                <a href="/participantdashboard">Dashboard</a>
+                <a href="/participantcalendar">Calendar</a>
+                <a href="/profilepage">User Profile</a>
+            </nav>
         </div>
-    </div>
-</header>
+    </header>
 
-<main>
-    <aside class="sidebar">
-        <div class="logo-container">
-            <a href="{{ route('participanthome') }}" class="logo">EVENTURE</a>
-        </div>
-        <ul>
-            <li><a href=""><i class="fas fa-home-alt"></i> Dashboard</a></li>
-            <li><a href=""><i class="fas fa-calendar-alt"></i> Event Hosted</a></li>
-            <li><a href=""><i class="fas fa-user-friends"></i> Participant Listing</a></li>
-            <li><a href=""><i class="fas fa-users"></i> Crew Listing</a></li>
-            <li><a href=""><i class="fas fa-chart-line"></i> Reports</a></li>
-            <li><a href="" class="active"><i class="fas fa-star"></i> Feedback</a></li>
-        </ul>
-        <ul style="margin-top: 60px;">
-            <li><a href=""><i class="fas fa-cog"></i> Settings</a></li>
-            <li><a href="{{ route('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-    </aside>
+    <main>
+    <section class="main-content">
+        @if (session('error'))
+            <p class="error">{{ session('error') }}</p>
+        @elseif (session('success'))
+            <p class="success">{{ session('success') }}</p>
+        @endif
 
-    <div class="main-content">
-        <h2>Feedback Collection Page</h2>
-        <p>View feedback from participants to understand the strengths and weaknesses of your events.</p>
+        <div class="feedback-row">
+            <!-- Event Details Section -->
+            <div class="event-details">
+                <h2>Event Details</h2>
+                @if ($event)
+                    <p><strong>Event Name:</strong> {{ $event->event_name }}</p>
+                    <p><strong>Description:</strong> {{ $event->description }}</p>
+                    <p><strong>Location:</strong> {{ $event->location }}</p>
+                    <p><strong>Start Date:</strong> {{ date('F j, Y, g:i A', strtotime($event->start_date)) }}</p>
+                    <p><strong>End Date:</strong> {{ date('F j, Y, g:i A', strtotime($event->end_date)) }}</p>
+                    <p><strong>Type:</strong> {{ ucfirst($event->event_type) }}</p>
+                    <p><strong>Format:</strong> {{ ucfirst($event->event_format) }}</p>
+                @endif
+            </div>
 
-        <!-- Events Feedback Section -->
-        <div class="feedback-list">
-            <h3>Feedback for Events</h3>
-            @if ($allEvents->isNotEmpty())
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Event Name</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($allEvents as $event)
-                            <tr>
-                                <td>{{ $event->event_name }}</td>
-                                <td>
-                                    <a href="{{ route('feedback.crew.submit', $event->event_id, $clubId->club_id) }}" class="btn-view-feedback">View Feedback</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @else
-                <p>No events available under the selected club.</p>
-            @endif
-        </div>
+            <!-- Feedback Form Section -->
+            <div class="feedback-form">
+                @if ($existing_feedback)
+                    <h2>Your Previous Feedback</h2>
+                    <p><strong>Rating:</strong> {{ $existing_feedback->rating }} out of 5 stars</p>
+                    <p><strong>Feedback:</strong> {{ $existing_feedback->feedback }}</p>
+                @else
+                    <h2>Provide Feedback</h2>
+                    <form method="POST" action="{{ route('feedback.submit') }}" onsubmit="return validateForm()">
+                        @csrf
+                        <input type="hidden" name="event_id" value="{{ request('event_id') }}">
 
-        <!-- Crew Feedback Section -->
-        <div class="feedback-list">
-            <h3>Select an Event to Rate Your Crew Members</h3>
-            <form method="POST" action="{{ route('feedback.crew.submit') }}">
-                @csrf
-                <label for="event_id">Event:</label>
-                <select name="event_id" id="event_id" onchange="fetchCrews(this.value)">
-                    <option value="">-- Select Event --</option>
-                    @foreach ($crewEvents as $event)
-                        <option value="{{ $event->event_id }}">{{ $event->event_name }}</option>
-                    @endforeach
-                </select>
-            </form>
+                        <div class="form-group">
+                            @if($student && $student->student_photo)
+                                <img src="data:image/jpeg;base64,{{ base64_encode($student->student_photo) }}" alt="Student Photo" class="profile-pic">
+                            @else
+                                <p>No photo available.</p>
+                            @endif
+                        </div>
 
-            <div id="crew-feedback-form" style="display: none;">
-                <h4>Rate a Crew Member</h4>
-                <form method="POST" action="{{ route('feedback.crew.submit') }}">
-                    @csrf
-                    <input type="hidden" name="event_id" id="selected_event_id">
+                        <div class="form-group">
+                            <label for="first_name">First Name:</label>
+                            <input type="text" id="first_name" name="first_name" value="{{ $student->first_name }}" readonly>
+                        </div>
 
-                    <label for="crew_id">Crew Member:</label>
-                    <select name="crew_id" id="crew_id"></select>
+                        <div class="form-group">
+                            <label for="last_name">Last Name:</label>
+                            <input type="text" id="last_name" name="last_name" value="{{ $student->last_name }}" readonly>
+                        </div>
 
-                    <label for="rating">Rating:</label>
-                    <input type="number" name="rating" min="1" max="5" required>
+                        <div class="form-group">
+                            <label for="rating">Rating (1 to 5):</label>
+                            <div class="rating-stars" id="rating-stars">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <span class="star" data-value="{{ $i }}">☆</span>
+                                @endfor
+                            </div>
+                            <input type="hidden" name="rating" id="rating" required>
+                        </div>
 
-                    <label for="feedback">Feedback:</label>
-                    <textarea name="feedback" rows="4" required></textarea>
+                        <div class="form-group">
+                            <label for="feedback">Feedback:</label>
+                            <textarea name="feedback" id="feedback" rows="5" required placeholder="Share your thoughts..."></textarea>
+                        </div>
 
-                    <button type="submit" class="btn-submit-feedback">Submit Feedback</button>
-                </form>
+                        <button type="submit">Submit Feedback</button>
+                    </form>
+                @endif
             </div>
         </div>
-    </div>
+    </section>
 </main>
 
-<script>
-    function fetchCrews(eventId) {
-        if (!eventId) return;
 
-        document.getElementById('selected_event_id').value = eventId;
-        fetch('{{ route('feedback.crews') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ event_id: eventId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            const crewSelect = document.getElementById('crew_id');
-            crewSelect.innerHTML = '<option value="">-- Select Crew --</option>';
-            data.forEach(crew => {
-                crewSelect.innerHTML += `<option value="${crew.crew_id}">${crew.name} - Role: ${crew.role}</option>`;
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('.rating-stars .star');
+            const ratingInput = document.getElementById('rating');
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = this.getAttribute('data-value');
+                    ratingInput.value = rating;
+
+                    stars.forEach(star => {
+                        star.classList.toggle('filled', star.getAttribute('data-value') <= rating);
+                    });
+                });
             });
-            document.getElementById('crew-feedback-form').style.display = 'block';
-        })
-        .catch(error => console.error('Error fetching crews:', error));
-    }
-</script>
+        });
+
+        function validateForm() {
+            const rating = document.getElementById('rating').value;
+            const feedback = document.getElementById('feedback').value.trim();
+            if (!rating || !feedback) {
+                alert("Please fill out both the rating and feedback fields.");
+                return false;
+            }
+            return true;
+        }
+    </script>
 
 </body>
+
 </html>
